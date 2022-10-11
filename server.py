@@ -20,6 +20,11 @@ def register():
     return jsonify(received_registration)
 
 
+@app.route('/menu', methods=['GET'])
+def get_menu():
+    return jsonify(food_ordering_system.restaurant_data.__dict__)
+
+
 # start the program execution
 if __name__ == "__main__":
     # initialize server as a thread
