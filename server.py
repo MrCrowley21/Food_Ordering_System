@@ -20,6 +20,14 @@ def register():
     return jsonify(received_registration)
 
 
+@app.route('/order', methods=['POST'])
+def get_orders():
+    order = request.json  # extract sent data
+    logging.info(f'Received the order from the client {order["client_id"]}')
+    food_ordering_system.register_restaurant(order)
+    return jsonify(order)
+
+
 @app.route('/menu', methods=['GET'])
 def get_menu():
     return jsonify(food_ordering_system.restaurant_data.__dict__)
