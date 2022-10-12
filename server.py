@@ -3,6 +3,7 @@ from threading import Thread
 from flask import Flask, request, jsonify
 
 from Components_logic.Food_ordering_system import *
+from Components_logic.Client_service_order import *
 
 # initialize the logger mode
 logging.basicConfig(level=logging.DEBUG)
@@ -24,7 +25,8 @@ def register():
 def get_orders():
     order = request.json  # extract sent data
     logging.info(f'Received the order from the client {order["client_id"]}')
-    food_ordering_system.register_restaurant(order)
+    client_service_order = ClientServiceOrder(order)
+    food_ordering_system.distribute_order_to_dinning_halls(client_service_order)
     return jsonify(order)
 
 
