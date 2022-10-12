@@ -26,7 +26,7 @@ def get_orders():
     order = request.json  # extract sent data
     logging.info(f'Received the order from the client {order["client_id"]}')
     client_service_order = ClientServiceOrder(order)
-    food_ordering_system.distribute_order_to_dinning_halls(client_service_order)
+    Thread(target=food_ordering_system.distribute_order_to_dinning_halls, args=(client_service_order,))
     return jsonify(order)
 
 
