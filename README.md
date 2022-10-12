@@ -1,10 +1,10 @@
-## Kitchen
+## Food Ordering Service
 This repository, _Food Ordering Service_, represents a part of a bigger project of a food ordering simulation,
 performed as laboratory work during the _Network Programming_ course. Other components of
 this project are: 
 [_Dinning Hall_](https://github.com/MrCrowley21/Dinning_Hall.git),
 [_Kitchen_](https://github.com/MrCrowley21/Kitchen.git), and
-[_Client_Service_]https://github.com/MrCrowley21/Client_Service.git) .\
+[_Client_Service_](https://github.com/MrCrowley21/Client_Service.git) .\
 !**Note** the fact that this version of README file is not final and will be modified  further.\
 First, to run the project into a docker container, perform the following commands:
 ````
