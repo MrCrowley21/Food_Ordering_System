@@ -37,8 +37,15 @@ def get_menu():
     return jsonify(restaurant_data)
 
 
+@app.route('/rating', methods=['POST'])
+def get_rating():
+    rating_data = request.json
+    Thread(target=food_ordering_system.distribute_ratings, args=(rating_data,))
+    return '', 204
+
+
 # start the program execution
 if __name__ == "__main__":
     # initialize server as a thread
-    Thread(target=lambda: app.run(port=5004, host="0.0.0.0", debug=True, use_reloader=False)).start()
+    Thread(target=lambda: app.run(port=5002, host="0.0.0.0", debug=True, use_reloader=False)).start()
     food_ordering_system = FoodOrderingSystem()

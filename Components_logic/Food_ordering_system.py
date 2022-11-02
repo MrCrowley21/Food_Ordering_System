@@ -29,9 +29,11 @@ class FoodOrderingSystem:
         restaurants = []
         for restaurant in self.restaurant_data.restaurants_data:
             updates = requests.get(f'{restaurant["address"]}update_data').json()
+            logging.info(f'88888888888 Updating {updates}')
             restaurant['rating'] = updates['rating']
             if updates['is_available']:
                 restaurants.append(restaurant)
+        logging.info(f'{restaurants}')
         return {'restaurants': len(restaurants), 'restaurants_data': restaurants}
 
     def distribute_order_to_dinning_halls(self, orders):
@@ -48,3 +50,12 @@ class FoodOrderingSystem:
             responses.append(response)
         logging.info(f'Order of client {orders.client_id} has been successfully sent to the dinning hall')
         return {'order_id': client_id, 'orders': responses}
+
+    def distribute_ratings(self, rating_data):
+        ratings = rating_data.orders
+        for restaurant in ratings:
+            rating_to_send = {'order_id': restaurant['order_id'], 'rating': restaurant['rating'],
+                               'estimated_waiting_time': restaurant['estimated_waiting_time'],
+                               'waiting_time': restaurant['waiting_time']}
+            route = self.restaurant_routes[restaurant]
+            requests.post(f'{route}update_data', json=rating_to_send)
