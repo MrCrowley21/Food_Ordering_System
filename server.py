@@ -26,17 +26,26 @@ def get_orders():
     order = request.json  # extract sent data
     logging.info(f'Received the order from the client {order["client_id"]}')
     client_service_order = ClientServiceOrder(order)
-    Thread(target=food_ordering_system.distribute_order_to_dinning_halls, args=(client_service_order,))
-    return jsonify(order)
+    # Thread(target=food_ordering_system.distribute_order_to_dinning_halls, args=(client_service_order,)).start()
+    response = food_ordering_system.distribute_order_to_dinning_halls(client_service_order)
+    return jsonify(response)
 
 
 @app.route('/menu', methods=['GET'])
 def get_menu():
-    return jsonify(food_ordering_system.restaurant_data.__dict__)
+    restaurant_data = food_ordering_system.update_restaurant_data()
+    return jsonify(restaurant_data)
+
+
+@app.route('/rating', methods=['POST'])
+def get_rating():
+    rating_data = request.json
+    Thread(target=food_ordering_system.distribute_ratings, args=(rating_data,))
+    return '', 204
 
 
 # start the program execution
 if __name__ == "__main__":
     # initialize server as a thread
-    Thread(target=lambda: app.run(port=5004, host="0.0.0.0", debug=True, use_reloader=False)).start()
+    Thread(target=lambda: app.run(port=5002, host="0.0.0.0", debug=True, use_reloader=False)).start()
     food_ordering_system = FoodOrderingSystem()
