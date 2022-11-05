@@ -40,7 +40,7 @@ def get_menu():
 @app.route('/rating', methods=['POST'])
 def get_rating():
     rating_data = request.json
-    Thread(target=food_ordering_system.distribute_ratings, args=(rating_data,))
+    Thread(target=food_ordering_system.distribute_ratings, args=(rating_data,)).start()
     return '', 204
 
 

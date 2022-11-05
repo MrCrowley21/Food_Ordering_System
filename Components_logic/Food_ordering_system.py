@@ -28,11 +28,14 @@ class FoodOrderingSystem:
     def update_restaurant_data(self):
         restaurants = []
         for restaurant in self.restaurant_data.restaurants_data:
+            logging.info(f'{restaurant}')
             updates = requests.get(f'{restaurant["address"]}update_data').json()
-            logging.info(f'88888888888 Updating {updates}')
+            logging.info(f'Updating restaurant data:\n {updates}')
             restaurant['rating'] = updates['rating']
             if updates['is_available']:
                 restaurants.append(restaurant)
+        simulation_rating = self.compute_average_rating()
+        logging.info(f'Simulation rating is {simulation_rating}')
         logging.info(f'{restaurants}')
         return {'restaurants': len(restaurants), 'restaurants_data': restaurants}
 
@@ -52,10 +55,17 @@ class FoodOrderingSystem:
         return {'order_id': client_id, 'orders': responses}
 
     def distribute_ratings(self, rating_data):
-        ratings = rating_data.orders
+        ratings = rating_data['orders']
         for restaurant in ratings:
             rating_to_send = {'order_id': restaurant['order_id'], 'rating': restaurant['rating'],
-                               'estimated_waiting_time': restaurant['estimated_waiting_time'],
-                               'waiting_time': restaurant['waiting_time']}
-            route = self.restaurant_routes[restaurant]
-            requests.post(f'{route}update_data', json=rating_to_send)
+                              'estimated_waiting_time': restaurant['estimated_waiting_time'],
+                              'waiting_time': restaurant['waiting_time']}
+            route = self.restaurant_routes[int(restaurant['restaurant_id'])]
+            requests.post(f'{route}v2/rating', json=rating_to_send)
+
+    def compute_average_rating(self):
+        rating = 0
+        for restaurant in self.restaurant_data.restaurants_data:
+            rating += restaurant['rating']
+        rating /= self.restaurant_data.restaurants
+        return rating
